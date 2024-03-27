@@ -163,7 +163,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -176,7 +176,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -205,6 +205,99 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://u9648u6653u52c7.github.io/2024/03/27/TypeScript%E8%A3%85%E9%A5%B0%E5%99%A8%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="𝕏">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/03/27/TypeScript%E8%A3%85%E9%A5%B0%E5%99%A8%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/" class="post-title-link" itemprop="url">TypeScript装饰器完全指南</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-03-27 22:45:38 / 修改时间：22:51:56" itemprop="dateCreated datePublished" datetime="2024-03-27T22:45:38+08:00">2024-03-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>本文转载于<a target="_blank" rel="noopener" href="https://saul-mirone.github.io/a-complete-guide-to-typescript-decorator/">A Complete Guide to TypeScript Decorators</a></p>
+</blockquote>
+<p>装饰器让TypeScript的世界更好。 我们使用的许多库都基于这一强大特性构建, 例如<a target="_blank" rel="noopener" href="https://angular.io/">Angular</a>和<a target="_blank" rel="noopener" href="https://nestjs.com/">Nestjs</a>。 在这篇博客中我将介绍装饰器和它的许多细节。 我希望在读完这篇文章后，你可以理解何时和如何使用这一强的的特性。</p>
+<h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><p>装饰器本质上是一种特殊的函数被应用在于：</p>
+<ol>
+<li> 类</li>
+<li> 类属性</li>
+<li> 类方法</li>
+<li> 类访问器</li>
+<li> 类方法的参数</li>
+</ol>
+<p>所以应用装饰器其实很像是组合一系列函数，类似于高阶函数和类。 通过装饰器我们可以轻松实现<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/zh-hans/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F">代理模式</a>来使代码更简洁以及实现其它一些更有趣的能力。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024/03/27/TypeScript%E8%A3%85%E9%A5%B0%E5%99%A8%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -436,7 +529,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          
+          <img src="/2017/11/12/new-begin/team.jpeg" class="">
 
       
     </div>
@@ -602,8 +695,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <blockquote><p>The essence of the Mediator Pattern is to “<strong>define an object that encapsulates how a set of objects interact</strong>“. It promotes loose coupling by keeping objects from referring to each other explicitly, and it allows their interaction to be varied independently. Client classes can use the mediator to send messages to other clients, and can receive messages from other clients via an event on the mediator class.</p>
-<p><strong>Mediator</strong> - defines the interface for communication between Colleague objects<br><strong>ConcreteMediator</strong> - implements the Mediator interface and coordinates communication between Colleague objects. It is aware of all of the Colleagues and their purposes with regards to inter-communication.<br><strong>Colleague</strong> - defines the interface for communication with other Colleagues<br><strong>ConcreteColleague</strong> - implements the Colleague interface and communicates with other Colleagues through its Mediator</p>
+          <blockquote><p>The essence of the Mediator Pattern is to “<strong>define an object that encapsulates how a set of objects interact</strong>“. It promotes loose coupling by keeping objects from referring to each other explicitly, and it allows their interaction to be varied independently. Client classes can use the mediator to send messages to other clients, and can receive messages from other clients via an event on the mediator class.<br><img src="/2017/07/14/mediator-pattern/Mediator_design_pattern.png" class=""><br><strong>Mediator</strong> - defines the interface for communication between Colleague objects<br><strong>ConcreteMediator</strong> - implements the Mediator interface and coordinates communication between Colleague objects. It is aware of all of the Colleagues and their purposes with regards to inter-communication.<br><strong>Colleague</strong> - defines the interface for communication with other Colleagues<br><strong>ConcreteColleague</strong> - implements the Colleague interface and communicates with other Colleagues through its Mediator</p>
 <footer><strong>维基百科</strong><cite><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Mediator_pattern">en.wikipedia.org/wiki/Mediator_pattern</a></cite></footer></blockquote>
 
 <p>“中介者模式”：把对象（A）与对象（B）之间的__直接__通信关系，变成对象（A）与对象（B）通过__中介对象__来通信的__间接__关系，从而松散了对象（A）与对象（B）的耦合度；实现上必须“__你中有我，我中有你__”。（PS：如果参与通信的对象很多的话就会增加中介对象的复杂度。）</p>
@@ -980,7 +1072,7 @@
 <li>In the Decorator class, add a Component pointer as a field;</li>
 <li>In the Decorator class, pass a Component to the Decorator constructor to initialize the Component pointer;</li>
 <li>In the Decorator class, forward all Component methods to the Component pointer; </li>
-<li>In the ConcreteDecorator class, override any Component method(s) whose behavior needs to be modified.</li>
+<li>In the ConcreteDecorator class, override any Component method(s) whose behavior needs to be modified.<img src="/2017/07/11/decorator-pattern/Decorator_UML_class_diagram.svg" class=""></li>
 </ol>
 <footer><strong>维基百科</strong><cite><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Decorator_pattern#Intent">en.wikipedia.org/wiki/Decorator_pattern#Intent</a></cite></footer></blockquote>
           <!--noindex-->
@@ -991,89 +1083,6 @@
             </div>
           <!--/noindex-->
         
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://u9648u6653u52c7.github.io/2017/07/10/factory-pattern/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="𝕏">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2017/07/10/factory-pattern/" class="post-title-link" itemprop="url">工厂模式</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2017-07-10 16:43:04" itemprop="dateCreated datePublished" datetime="2017-07-10T16:43:04+08:00">2017-07-10</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2017-08-12 17:42:28" itemprop="dateModified" datetime="2017-08-12T17:42:28+08:00">2017-08-12</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <blockquote><p>Define an interface for creating an object, but let subclasses decide which class to instantiate. The Factory method lets a class defer instantiation it uses to subclasses.</p>
-<footer><strong>(Gang Of Four)</strong></footer></blockquote>
-
-<p>“工厂模式”：通过接口的方式__间接__调用（那些）类来创建对象；该接口通常用函数、类或类的静态方法来实现。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">Python示例代码，来自网络</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">from</span> abc <span class="keyword">import</span> ABCMeta, abstractmethod</span><br><span class="line"><span class="keyword">from</span> enum <span class="keyword">import</span> Enum</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span>:</span></span><br><span class="line">    __metaclass__ = ABCMeta</span><br><span class="line"></span><br><span class="line"><span class="meta">    @abstractmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_name</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">raise</span> NotImplementedError(<span class="string">&quot;You should implement this!&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Villager</span>(<span class="params">Person</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_name</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Village Person&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CityPerson</span>(<span class="params">Person</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_name</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;City Person&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PersonType</span>(<span class="params">Enum</span>):</span></span><br><span class="line">    RURAL = <span class="number">1</span></span><br><span class="line">    URBAN = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Factory</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_person</span>(<span class="params">self, person_type</span>):</span></span><br><span class="line">        <span class="keyword">if</span> person_type == PersonType.RURAL:</span><br><span class="line">            <span class="keyword">return</span> Villager()</span><br><span class="line">        <span class="keyword">elif</span> person_type == PersonType.URBAN:</span><br><span class="line">            <span class="keyword">return</span> CityPerson()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span> NotImplementedError(<span class="string">&quot;Unknown person type.&quot;</span>)</span><br><span class="line"></span><br><span class="line">factory = Factory()</span><br><span class="line">person = factory.get_person(PersonType.URBAN)</span><br><span class="line">print(person.get_name())</span><br></pre></td></tr></table></figure>
       
     </div>
 

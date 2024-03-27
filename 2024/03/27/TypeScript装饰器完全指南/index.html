@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"u9648u6653u52c7.github.io","root":"/","images":"/images","scheme":"Pisces","version":"8.1.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}};
+  </script>
+<meta name="description" content="本文转载于A Complete Guide to TypeScript Decorators  装饰器让TypeScript的世界更好。 我们使用的许多库都基于这一强大特性构建, 例如Angular和Nestjs。 在这篇博客中我将介绍装饰器和它的许多细节。 我希望在读完这篇文章后，你可以理解何时和如何使用这一强的的特性。 概览装饰器本质上是一种特殊的函数被应用在于：   类  类属性  类方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TypeScript装饰器完全指南">
+<meta property="og:url" content="http://u9648u6653u52c7.github.io/2024/03/27/TypeScript%E8%A3%85%E9%A5%B0%E5%99%A8%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/index.html">
+<meta property="og:site_name" content="𝕏">
+<meta property="og:description" content="本文转载于A Complete Guide to TypeScript Decorators  装饰器让TypeScript的世界更好。 我们使用的许多库都基于这一强大特性构建, 例如Angular和Nestjs。 在这篇博客中我将介绍装饰器和它的许多细节。 我希望在读完这篇文章后，你可以理解何时和如何使用这一强的的特性。 概览装饰器本质上是一种特殊的函数被应用在于：   类  类属性  类方法">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-03-27T14:45:38.000Z">
+<meta property="article:modified_time" content="2024-03-27T14:51:56.061Z">
+<meta property="article:tag" content="TypeScript">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://u9648u6653u52c7.github.io/2024/03/27/TypeScript%E8%A3%85%E9%A5%B0%E5%99%A8%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>TypeScript装饰器完全指南 | 𝕏</title>
+  
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">𝕏</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A6%82%E8%A7%88"><span class="nav-number">1.</span> <span class="nav-text">概览</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C"><span class="nav-number">2.</span> <span class="nav-text">执行</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E6%9C%BA"><span class="nav-number">2.1.</span> <span class="nav-text">时机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F"><span class="nav-number">2.2.</span> <span class="nav-text">执行顺序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AA%E8%A3%85%E9%A5%B0%E5%99%A8%E7%9A%84%E7%BB%84%E5%90%88"><span class="nav-number">2.3.</span> <span class="nav-text">多个装饰器的组合</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">3.</span> <span class="nav-text">定义</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E8%A3%85%E9%A5%B0%E5%99%A8"><span class="nav-number">3.1.</span> <span class="nav-text">类装饰器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7%E8%A3%85%E9%A5%B0%E5%99%A8"><span class="nav-number">3.2.</span> <span class="nav-text">属性装饰器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E8%A3%85%E9%A5%B0%E5%99%A8"><span class="nav-number">3.3.</span> <span class="nav-text">方法装饰器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E5%99%A8%E8%A3%85%E9%A5%B0%E5%99%A8"><span class="nav-number">3.4.</span> <span class="nav-text">访问器装饰器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E8%A3%85%E9%A5%B0%E5%99%A8"><span class="nav-number">3.5.</span> <span class="nav-text">参数装饰器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E5%90%88"><span class="nav-number">4.</span> <span class="nav-text">结合</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%83%E6%95%B0%E6%8D%AE"><span class="nav-number">5.</span> <span class="nav-text">元数据</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%95%E6%97%B6%E4%BD%BF%E7%94%A8%EF%BC%9F"><span class="nav-number">6.</span> <span class="nav-text">何时使用？</span></a></li></ol></div>
+        </section>
+        <!--/noindex-->
+
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </section>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://u9648u6653u52c7.github.io/2024/03/27/TypeScript%E8%A3%85%E9%A5%B0%E5%99%A8%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="𝕏">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          TypeScript装饰器完全指南
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-03-27 22:45:38 / 修改时间：22:51:56" itemprop="dateCreated datePublished" datetime="2024-03-27T22:45:38+08:00">2024-03-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">编程</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p>本文转载于<a target="_blank" rel="noopener" href="https://saul-mirone.github.io/a-complete-guide-to-typescript-decorator/">A Complete Guide to TypeScript Decorators</a></p>
+</blockquote>
+<p>装饰器让TypeScript的世界更好。 我们使用的许多库都基于这一强大特性构建, 例如<a target="_blank" rel="noopener" href="https://angular.io/">Angular</a>和<a target="_blank" rel="noopener" href="https://nestjs.com/">Nestjs</a>。 在这篇博客中我将介绍装饰器和它的许多细节。 我希望在读完这篇文章后，你可以理解何时和如何使用这一强的的特性。</p>
+<h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><p>装饰器本质上是一种特殊的函数被应用在于：</p>
+<ol>
+<li> 类</li>
+<li> 类属性</li>
+<li> 类方法</li>
+<li> 类访问器</li>
+<li> 类方法的参数</li>
+</ol>
+<p>所以应用装饰器其实很像是组合一系列函数，类似于高阶函数和类。 通过装饰器我们可以轻松实现<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/zh-hans/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F">代理模式</a>来使代码更简洁以及实现其它一些更有趣的能力。</p>
+<a id="more"></a>
+<p>装饰器的语法十分简单，只需要在想使用的装饰器前加上<code>@</code>符号，装饰器就会被应用到目标上：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">simpleDecorator</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;---hi I am a decorator---&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@simpleDecorator</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一共有5种装饰器可被我们使用：</p>
+<ol>
+<li> 类装饰器</li>
+<li> 属性装饰器</li>
+<li> 方法装饰器</li>
+<li> 访问器装饰器</li>
+<li> 参数装饰器</li>
+</ol>
+<p>让我们来快速认识一下这五种装饰器：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 类装饰器</span></span><br><span class="line"><span class="meta">@classDecorator</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bird</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 属性装饰器</span></span><br><span class="line">  <span class="meta">@propertyDecorator</span></span><br><span class="line">  name: <span class="built_in">string</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 方法装饰器</span></span><br><span class="line">  <span class="meta">@methodDecorator</span></span><br><span class="line">  fly(</span><br><span class="line">    <span class="comment">// 参数装饰器</span></span><br><span class="line">    <span class="meta">@parameterDecorator</span></span><br><span class="line">      meters: <span class="built_in">number</span></span><br><span class="line">  ) &#123;&#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 访问器装饰器</span></span><br><span class="line">  <span class="meta">@accessorDecorator</span></span><br><span class="line">  <span class="keyword">get</span> <span class="title">egg</span>() &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="执行"><a href="#执行" class="headerlink" title="执行"></a>执行</h1><h2 id="时机"><a href="#时机" class="headerlink" title="时机"></a>时机</h2><p>装饰器只在解释执行时应用一次，例如：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params">C</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;apply decorator&#x27;</span>)</span><br><span class="line">  <span class="keyword">return</span> C</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@f</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// output: apply decorator</span></span><br></pre></td></tr></table></figure>
+
+<p>这里的代码会在终端中打印<code>apply decorator</code>，即便我们其实并没有使用类A。</p>
+<h2 id="执行顺序"><a href="#执行顺序" class="headerlink" title="执行顺序"></a>执行顺序</h2><p>不同类型的装饰器的执行顺序是明确定义的：</p>
+<ol>
+<li> 实例成员：参数装饰器 -&gt; 方法 / 访问器 / 属性 装饰器 </li>
+<li> 静态成员:  参数装饰器 -&gt; 方法 / 访问器 / 属性 装饰器 </li>
+<li> 构造器: 参数装饰器 </li>
+<li> 类装饰器</li>
+</ol>
+<p>例如，考虑以下代码：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params">key: <span class="built_in">string</span></span>): <span class="title">any</span> </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;evaluate: &quot;</span>, key);</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;call: &quot;</span>, key);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@f</span>(<span class="string">&quot;Class Decorator&quot;</span>)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;</span><br><span class="line">  <span class="meta">@f</span>(<span class="string">&quot;Static Property&quot;</span>)</span><br><span class="line">  <span class="keyword">static</span> prop?: <span class="built_in">number</span>;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@f</span>(<span class="string">&quot;Static Method&quot;</span>)</span><br><span class="line">  <span class="keyword">static</span> <span class="function"><span class="title">method</span>(<span class="params"><span class="meta">@f</span>(<span class="string">&quot;Static Method Parameter&quot;</span>) foo</span>)</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="title">constructor</span>(<span class="params"><span class="meta">@f</span>(<span class="string">&quot;Constructor Parameter&quot;</span>) foo</span>)</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@f</span>(<span class="string">&quot;Instance Method&quot;</span>)</span><br><span class="line">  <span class="function"><span class="title">method</span>(<span class="params"><span class="meta">@f</span>(<span class="string">&quot;Instance Method Parameter&quot;</span>) foo</span>)</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@f</span>(<span class="string">&quot;Instance Property&quot;</span>)</span><br><span class="line">  prop?: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它将会打印出以下信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">evaluate:  Instance Method</span><br><span class="line">evaluate:  Instance Method Parameter</span><br><span class="line">call:  Instance Method Parameter</span><br><span class="line">call:  Instance Method</span><br><span class="line">evaluate:  Instance Property</span><br><span class="line">call:  Instance Property</span><br><span class="line">evaluate:  Static Property</span><br><span class="line">call:  Static Property</span><br><span class="line">evaluate:  Static Method</span><br><span class="line">evaluate:  Static Method Parameter</span><br><span class="line">call:  Static Method Parameter</span><br><span class="line">call:  Static Method</span><br><span class="line">evaluate:  Class Decorator</span><br><span class="line">evaluate:  Constructor Parameter</span><br><span class="line">call:  Constructor Parameter</span><br><span class="line">call:  Class Decorator</span><br></pre></td></tr></table></figure>
+
+<p>你也许会注意到执行实例属性<code>prop</code>晚于实例方法<code>method</code> 然而执行静态属性<code>static prop</code>早于静态方法<code>static method</code>。 这是因为对于属性/方法/访问器装饰器而言，执行顺序取决于声明它们的顺序。</p>
+<p>然而，同一方法中不同参数的装饰器的执行顺序是相反的， 最后一个参数的装饰器会最先被执行：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params">key: <span class="built_in">string</span></span>): <span class="title">any</span> </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;evaluate: &quot;</span>, key);</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;call: &quot;</span>, key);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;</span><br><span class="line">  method(</span><br><span class="line">    <span class="meta">@f</span>(<span class="string">&quot;Parameter Foo&quot;</span>) foo,</span><br><span class="line">    <span class="meta">@f</span>(<span class="string">&quot;Parameter Bar&quot;</span>) bar</span><br><span class="line">  ) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的代码打印出的结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">evaluate:  Parameter Foo</span><br><span class="line">evaluate:  Parameter Bar</span><br><span class="line">call:  Parameter Bar</span><br><span class="line">call:  Parameter Foo</span><br></pre></td></tr></table></figure>
+
+<h2 id="多个装饰器的组合"><a href="#多个装饰器的组合" class="headerlink" title="多个装饰器的组合"></a>多个装饰器的组合</h2><p>你可以对同一目标应用多个装饰器。它们的组合顺序为：</p>
+<ol>
+<li> 求值外层装饰器</li>
+<li> 求值内层装饰器</li>
+<li> 调用内层装饰器</li>
+<li> 调用外层装饰器</li>
+</ol>
+<p>例如:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params">key: <span class="built_in">string</span></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&quot;evaluate: &quot;</span>, key);</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;call: &quot;</span>, key);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;</span><br><span class="line">  <span class="meta">@f</span>(<span class="string">&quot;Outer Method&quot;</span>)</span><br><span class="line">  <span class="meta">@f</span>(<span class="string">&quot;Inner Method&quot;</span>)</span><br><span class="line">  <span class="function"><span class="title">method</span>(<span class="params"></span>)</span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的代码打印出的结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">evaluate: Outer Method</span><br><span class="line">evaluate: Inner Method</span><br><span class="line">call: Inner Method</span><br><span class="line">call: Outer Method</span><br></pre></td></tr></table></figure>
+
+<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><h2 id="类装饰器"><a href="#类装饰器" class="headerlink" title="类装饰器"></a>类装饰器</h2><p>类型声明：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ClassDecorator = <span class="xml"><span class="tag">&lt;<span class="name">TFunction</span> <span class="attr">extends</span> <span class="attr">Function</span>&gt;</span></span></span><br><span class="line"><span class="xml">  (target: TFunction) =&gt; TFunction | void;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>@参数:</p>
+<ol>
+<li> <code>target</code>: 类的构造器。</li>
+</ol>
+</li>
+<li><p>@返回:<br>  如果类装饰器返回了一个值，她将会被用来代替原有的类构造器的声明。</p>
+</li>
+</ul>
+<p>因此，类装饰器适合用于继承一个现有类并添加一些属性和方法。</p>
+<p>例如我们可以添加一个<code>toString</code>方法给所有的类来覆盖它原有的<code>toString</code>方法。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Consturctor = &#123; <span class="keyword">new</span> (...args: <span class="built_in">any</span>[]): <span class="built_in">any</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">toString</span>&lt;<span class="title">T</span> <span class="title">extends</span> <span class="title">Consturctor</span>&gt;(<span class="params">BaseClass: T</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="class"><span class="keyword">class</span> <span class="keyword">extends</span> <span class="title">BaseClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="title">toString</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">JSON</span>.stringify(<span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@toString</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> foo = <span class="string">&quot;foo&quot;</span>;</span><br><span class="line">  <span class="keyword">public</span> num = <span class="number">24</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">new</span> C().toString())</span><br><span class="line"><span class="comment">// -&gt; &#123;&quot;foo&quot;:&quot;foo&quot;,&quot;num&quot;:24&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>遗憾的是装饰器并没有类型保护，这意味着：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="function"><span class="keyword">function</span> <span class="title">Blah</span>&lt;<span class="title">T</span>&gt;(<span class="params">target: T</span>): <span class="title">T</span> &amp; </span>&#123;foo: <span class="built_in">number</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Blah</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">bar</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.foo; <span class="comment">// Property &#x27;foo&#x27; does not exist on type &#x27;Foo&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> Foo().foo; <span class="comment">// Property &#x27;foo&#x27; does not exist on type &#x27;Foo&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>这是<a target="_blank" rel="noopener" href="https://github.com/microsoft/TypeScript/issues/4881">一个TypeScript的已知的缺陷</a>。 目前我们能做的只有额外提供一个类用于提供类型信息：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="function"><span class="keyword">function</span> <span class="title">Blah</span>&lt;<span class="title">T</span>&gt;(<span class="params">target: T</span>): <span class="title">T</span> &amp; </span>&#123;foo: <span class="built_in">number</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span> </span>&#123;</span><br><span class="line">  foo: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Blah</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span> <span class="keyword">extends</span> <span class="title">Base</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">bar</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.foo;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> Foo().foo;</span><br></pre></td></tr></table></figure>
+
+<h2 id="属性装饰器"><a href="#属性装饰器" class="headerlink" title="属性装饰器"></a>属性装饰器</h2><p>类型声明：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> PropertyDecorator =</span><br><span class="line">  (target: <span class="built_in">Object</span>, <span class="attr">propertyKey</span>: <span class="built_in">string</span> | symbol) =&gt; <span class="built_in">void</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>@参数:</p>
+<ol>
+<li> <code>target</code>: 对于静态成员来说是类的构造器，对于实例成员来说是类的原型链。</li>
+<li> <code>propertyKey</code>: 属性的名称。</li>
+</ol>
+</li>
+<li><p>@返回:<br>  返回的结果将被忽略。</p>
+</li>
+</ul>
+<p>除了用于收集信息外，属性装饰器也可以用来给类添加额外的方法和属性。 例如我们可以写一个装饰器来给某些属性添加监听器。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">capitalizeFirstLetter</span>(<span class="params">str: <span class="built_in">string</span></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> str.charAt(<span class="number">0</span>).toUpperCase() + str.slice(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">observable</span>(<span class="params">target: <span class="built_in">any</span>, key: <span class="built_in">string</span></span>): <span class="title">any</span> </span>&#123;</span><br><span class="line">  <span class="comment">// prop -&gt; onPropChange</span></span><br><span class="line">  <span class="keyword">const</span> targetKey = <span class="string">&quot;on&quot;</span> + capitalizeFirstLetter(key) + <span class="string">&quot;Change&quot;</span>;</span><br><span class="line"></span><br><span class="line">  target[targetKey] =</span><br><span class="line">    <span class="function"><span class="keyword">function</span> (<span class="params">fn: (prev: <span class="built_in">any</span>, next: <span class="built_in">any</span>) =&gt; <span class="built_in">void</span></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">let</span> prev = <span class="built_in">this</span>[key];</span><br><span class="line">      <span class="built_in">Reflect</span>.defineProperty(<span class="built_in">this</span>, key, &#123;</span><br><span class="line">        <span class="function"><span class="title">set</span>(<span class="params">next</span>)</span> &#123;</span><br><span class="line">          fn(prev, next);</span><br><span class="line">          prev = next;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;</span><br><span class="line">  <span class="meta">@observable</span></span><br><span class="line">  foo = -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@observable</span></span><br><span class="line">  bar = <span class="string">&quot;bar&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> c = <span class="keyword">new</span> C();</span><br><span class="line"></span><br><span class="line">c.onFooChange(<span class="function">(<span class="params">prev, next</span>) =&gt;</span> <span class="built_in">console</span>.log(<span class="string">`prev: <span class="subst">$&#123;prev&#125;</span>, next: <span class="subst">$&#123;next&#125;</span>`</span>))</span><br><span class="line">c.onBarChange(<span class="function">(<span class="params">prev, next</span>) =&gt;</span> <span class="built_in">console</span>.log(<span class="string">`prev: <span class="subst">$&#123;prev&#125;</span>, next: <span class="subst">$&#123;next&#125;</span>`</span>))</span><br><span class="line"></span><br><span class="line">c.foo = <span class="number">100</span>; <span class="comment">// -&gt; prev: -1, next: 100</span></span><br><span class="line">c.foo = -<span class="number">3.14</span>; <span class="comment">// -&gt; prev: 100, next: -3.14</span></span><br><span class="line">c.bar = <span class="string">&quot;baz&quot;</span>; <span class="comment">// -&gt; prev: bar, next: baz</span></span><br><span class="line">c.bar = <span class="string">&quot;sing&quot;</span>; <span class="comment">// -&gt; prev: baz, next: sing</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="方法装饰器"><a href="#方法装饰器" class="headerlink" title="方法装饰器"></a>方法装饰器</h2><p>类型声明：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> MethodDecorator = &lt;T&gt;(</span><br><span class="line">  target: <span class="built_in">Object</span>,</span><br><span class="line">  propertyKey: <span class="built_in">string</span> | symbol,</span><br><span class="line">  descriptor: TypedPropertyDescriptor&lt;T&gt;</span><br><span class="line">) =&gt; TypedPropertyDescriptor&lt;T&gt; | <span class="built_in">void</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>@参数：</p>
+<ol>
+<li> <code>target</code>: 对于静态成员来说是类的构造器，对于实例成员来说是类的原型链。</li>
+<li> <code>propertyKey</code>: 属性的名称。</li>
+<li> <code>descriptor</code>: 属性的<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyDescriptor">描述器</a>。</li>
+</ol>
+</li>
+<li><p>  @返回： 如果返回了值，它会被用于替代属性的描述器。</p>
+</li>
+</ul>
+<p>方法装饰器不同于属性装饰器的地方在于<code>descriptor</code>参数。 通过这个参数我们可以修改方法原本的实现，添加一些共用逻辑。 例如我们可以给一些方法添加打印输入与输出的能力：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">logger</span>(<span class="params">target: <span class="built_in">any</span>, propertyKey: <span class="built_in">string</span>, descriptor: PropertyDescriptor</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> original = descriptor.value;</span><br><span class="line"></span><br><span class="line">  descriptor.value = <span class="function"><span class="keyword">function</span> (<span class="params">...args</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;params: &#x27;</span>, ...args);</span><br><span class="line">    <span class="keyword">const</span> result = original.call(<span class="built_in">this</span>, ...args);</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;result: &#x27;</span>, result);</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;</span><br><span class="line">  <span class="meta">@logger</span></span><br><span class="line">  <span class="function"><span class="title">add</span>(<span class="params">x: <span class="built_in">number</span>, y:<span class="built_in">number</span> </span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> x + y;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> c = <span class="keyword">new</span> C();</span><br><span class="line">c.add(<span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line"><span class="comment">// -&gt; params: 1, 2</span></span><br><span class="line"><span class="comment">// -&gt; result: 3</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="访问器装饰器"><a href="#访问器装饰器" class="headerlink" title="访问器装饰器"></a>访问器装饰器</h2><p>访问器装饰器总体上讲和方法装饰器很接近，唯一的区别在于描述器中有的key不同：</p>
+<p>方法装饰器的描述器的key为：</p>
+<ul>
+<li>  <code>value</code></li>
+<li>  <code>writable</code></li>
+<li>  <code>enumerable</code></li>
+<li>  <code>configurable</code></li>
+</ul>
+<p>访问器装饰器的描述器的key为：</p>
+<ul>
+<li>  <code>get</code></li>
+<li>  <code>set</code></li>
+<li>  <code>enumerable</code></li>
+<li>  <code>configurable</code></li>
+</ul>
+<p>例如，我们可以将某个属性设为不可变值：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">immutable</span>(<span class="params">target: <span class="built_in">any</span>, propertyKey: <span class="built_in">string</span>, descriptor: PropertyDescriptor</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> original = descriptor.set;</span><br><span class="line"></span><br><span class="line">  descriptor.set = <span class="function"><span class="keyword">function</span> (<span class="params">value: <span class="built_in">any</span></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> original.call(<span class="built_in">this</span>, &#123; ...value &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> _point = &#123; <span class="attr">x</span>: <span class="number">0</span>, <span class="attr">y</span>: <span class="number">0</span> &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@immutable</span></span><br><span class="line">  <span class="keyword">set</span> <span class="title">point</span>(<span class="params">value: &#123; x: <span class="built_in">number</span>, y: <span class="built_in">number</span> &#125;</span>) &#123;</span><br><span class="line">    <span class="built_in">this</span>._point = value;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">get</span> <span class="title">point</span>() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>._point;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> c = <span class="keyword">new</span> C();</span><br><span class="line"><span class="keyword">const</span> point = &#123; <span class="attr">x</span>: <span class="number">1</span>, <span class="attr">y</span>: <span class="number">1</span> &#125;</span><br><span class="line">c.point = point;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(c.point === point)</span><br><span class="line"><span class="comment">// -&gt; false</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="参数装饰器"><a href="#参数装饰器" class="headerlink" title="参数装饰器"></a>参数装饰器</h2><p>类型声明：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ParameterDecorator = (</span><br><span class="line">  target: <span class="built_in">Object</span>,</span><br><span class="line">  propertyKey: <span class="built_in">string</span> | symbol,</span><br><span class="line">  parameterIndex: <span class="built_in">number</span></span><br><span class="line">) =&gt; <span class="built_in">void</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>@参数：</p>
+<ol>
+<li> <code>target</code>: 对于静态成员来说是类的构造器，对于实例成员来说是类的原型链。</li>
+<li> <code>propertyKey</code>: 属性的名称(注意是方法的名称，而不是参数的名称)。</li>
+<li> <code>parameterIndex</code>: 参数在方法中所处的位置的下标。</li>
+</ol>
+</li>
+<li><p>@返回：<br>  返回的值将会被忽略。</p>
+</li>
+</ul>
+<p>单独的参数装饰器能做的事情很有限，它一般都被用于记录可被其它装饰器使用的信息。</p>
+<h1 id="结合"><a href="#结合" class="headerlink" title="结合"></a>结合</h1><p>对于一些复杂场景， 我们可能需要结合使用不同的装饰器。 例如如果我们不仅想给我们的接口添加静态检查，还想加上运行时检查的能力。</p>
+<p>我们可以用3个步骤来实现这个功能：</p>
+<ol>
+<li> 标记需要检查的参数 (因为参数装饰器先于方法装饰器执行)。</li>
+<li> 改变方法的<code>descriptor</code>的<code>value</code>的值，先运行参数检查器，如果失败就抛出异常。</li>
+<li> 运行原有的接口实现。</li>
+</ol>
+<p>以下是代码:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Validator = <span class="function">(<span class="params">x: <span class="built_in">any</span></span>) =&gt;</span> <span class="built_in">boolean</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// save the marks</span></span><br><span class="line"><span class="keyword">const</span> validateMap: Record&lt;<span class="built_in">string</span>, Validator[]&gt; = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 标记需要检查的参数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">typedDecoratorFactory</span>(<span class="params">validator: Validator</span>): <span class="title">ParameterDecorator</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">_, key, index</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> target = validateMap[key <span class="keyword">as</span> <span class="built_in">string</span>] ?? [];</span><br><span class="line">    target[index] = validator;</span><br><span class="line">    validateMap[key <span class="keyword">as</span> <span class="built_in">string</span>] = target;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">validate</span>(<span class="params">_: <span class="built_in">Object</span>, key: <span class="built_in">string</span>, descriptor: PropertyDescriptor</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> originalFn = descriptor.value;</span><br><span class="line">  descriptor.value = <span class="function"><span class="keyword">function</span>(<span class="params">...args: <span class="built_in">any</span>[]</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 运行检查器</span></span><br><span class="line">    <span class="keyword">const</span> validatorList = validateMap[key];</span><br><span class="line">    <span class="keyword">if</span> (validatorList) &#123;</span><br><span class="line">      args.forEach(<span class="function">(<span class="params">arg, index</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> validator = validatorList[index];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!validator) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">const</span> result = validator(arg);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!result) &#123;</span><br><span class="line">          <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(</span><br><span class="line">            <span class="string">`Failed for parameter: <span class="subst">$&#123;arg&#125;</span> of the index: <span class="subst">$&#123;index&#125;</span>`</span></span><br><span class="line">          );</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 运行原有的方法</span></span><br><span class="line">    <span class="keyword">return</span> originalFn.call(<span class="built_in">this</span>, ...args);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> isInt = typedDecoratorFactory(<span class="function">(<span class="params">x</span>) =&gt;</span> <span class="built_in">Number</span>.isInteger(x));</span><br><span class="line"><span class="keyword">const</span> isString = typedDecoratorFactory(<span class="function">(<span class="params">x</span>) =&gt;</span> <span class="keyword">typeof</span> x === <span class="string">&#x27;string&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;</span><br><span class="line">  <span class="meta">@validate</span></span><br><span class="line">  <span class="function"><span class="title">sayRepeat</span>(<span class="params"><span class="meta">@isString</span> word: <span class="built_in">string</span>, <span class="meta">@isInt</span> x: <span class="built_in">number</span></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Array</span>(x).fill(word).join(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> c = <span class="keyword">new</span> C();</span><br><span class="line">c.sayRepeat(<span class="string">&#x27;hello&#x27;</span>, <span class="number">2</span>); <span class="comment">// pass</span></span><br><span class="line">c.sayRepeat(<span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;lol&#x27;</span> <span class="keyword">as</span> <span class="built_in">any</span>); <span class="comment">// throw an error</span></span><br></pre></td></tr></table></figure>
+
+<p>正如例子中展示的， 对我们来说同时理解不同种类装饰器的执行顺序和职责都很重要。</p>
+<h1 id="元数据"><a href="#元数据" class="headerlink" title="元数据"></a>元数据</h1><p>严格地说，元数据和装饰器是EcmaScript中两个独立的部分。 然而，如果你想实现像是<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%8F%8D%E5%B0%84_(%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6)">反射</a>这样的能力，你总是同时需要它们。</p>
+<p>如果我们回顾上一个例子，如果我们不想写各种不同的检查器呢？ 或者说，能否只写一个检查器能够通过我们编写的TS类型声明来自动运行类型检查？</p>
+<p>有了<a target="_blank" rel="noopener" href="https://github.com/rbuckton/reflect-metadata">reflect-metadata</a>的帮助， 我们可以获取编译期的类型。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;reflect-metadata&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">validate</span>(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  target: <span class="built_in">Object</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">  key: <span class="built_in">string</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">  descriptor: PropertyDescriptor</span></span></span><br><span class="line"><span class="function"><span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> originalFn = descriptor.value;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 获取参数的编译期类型</span></span><br><span class="line">  <span class="keyword">const</span> designParamTypes = <span class="built_in">Reflect</span></span><br><span class="line">    .getMetadata(<span class="string">&#x27;design:paramtypes&#x27;</span>, target, key);</span><br><span class="line"></span><br><span class="line">  descriptor.value = <span class="function"><span class="keyword">function</span> (<span class="params">...args: <span class="built_in">any</span>[]</span>) </span>&#123;</span><br><span class="line">    args.forEach(<span class="function">(<span class="params">arg, index</span>) =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">const</span> paramType = designParamTypes[index];</span><br><span class="line"></span><br><span class="line">      <span class="keyword">const</span> result = arg.constructor === paramType</span><br><span class="line">        || arg <span class="keyword">instanceof</span> paramType;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (!result) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(</span><br><span class="line">          <span class="string">`Failed for validating parameter: <span class="subst">$&#123;arg&#125;</span> of the index: <span class="subst">$&#123;index&#125;</span>`</span></span><br><span class="line">        );</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> originalFn.call(<span class="built_in">this</span>, ...args);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;</span><br><span class="line">  <span class="meta">@validate</span></span><br><span class="line">  <span class="function"><span class="title">sayRepeat</span>(<span class="params">word: <span class="built_in">string</span>, x: <span class="built_in">number</span></span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Array</span>(x).fill(word).join(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> c = <span class="keyword">new</span> C();</span><br><span class="line">c.sayRepeat(<span class="string">&#x27;hello&#x27;</span>, <span class="number">2</span>); <span class="comment">// pass</span></span><br><span class="line">c.sayRepeat(<span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;lol&#x27;</span> <span class="keyword">as</span> <span class="built_in">any</span>); <span class="comment">// throw an error</span></span><br></pre></td></tr></table></figure>
+
+<p>目前为止一共有三种编译期类型可以拿到：</p>
+<ul>
+<li>  <code>design:type</code>: 属性的类型。</li>
+<li>  <code>desin:paramtypes</code>: 方法的参数的类型。</li>
+<li>  <code>design:returntype</code>: 方法的返回值的类型。</li>
+</ul>
+<p>这三种方式拿到的结果都是构造函数（例如<code>String</code>和<code>Number</code>）。规则是：</p>
+<ul>
+<li>  number -&gt; <code>Number</code></li>
+<li>  string -&gt; <code>String</code></li>
+<li>  boolean -&gt; <code>Boolean</code></li>
+<li>  void/null/never -&gt; <code>undefined</code></li>
+<li>  Array/Tuple -&gt; <code>Array</code></li>
+<li>  Class -&gt; 类的构造函数</li>
+<li>  Enum -&gt; 如果是纯数字枚举则为<code>Number</code>, 否则是 <code>Object</code></li>
+<li>  Function -&gt; <code>Function</code></li>
+<li>  其余都是<code>Object</code></li>
+</ul>
+<h1 id="何时使用？"><a href="#何时使用？" class="headerlink" title="何时使用？"></a>何时使用？</h1><p>现在我们可以对于何时使用装饰器得出结论， 在阅读上面的代码中你可能也有所感觉。</p>
+<p>我将例举一些常用的使用场景：</p>
+<ul>
+<li>  Before/After钩子。</li>
+<li>  监听属性改变或者方法调用。</li>
+<li>  对方法的参数做转换。</li>
+<li>  添加额外的方法和属性。</li>
+<li>  运行时类型检查。</li>
+<li>  自动编解码。</li>
+<li>  依赖注入。</li>
+</ul>
+<p>我希望读完这篇文章后，你可以找到装饰器的更多使用场景，并且用它来简化你的代码。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/TypeScript/" rel="tag"># TypeScript</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/03/11/suan-qie-zi/" rel="prev" title="蒜香茄子">
+                  <i class="fa fa-chevron-left"></i> 蒜香茄子
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+</body>
+</html>
